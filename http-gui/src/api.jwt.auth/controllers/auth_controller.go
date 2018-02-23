@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"api.jwt.auth/services"
-	"api.jwt.auth/services/models"
+	"dorian/http-gui/src/api.jwt.auth/services"
+	"dorian/http-gui/src/api.jwt.auth/services/models"
 	"encoding/json"
 	"net/http"
 )
