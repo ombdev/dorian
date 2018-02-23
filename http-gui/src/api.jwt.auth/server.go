@@ -1,8 +1,8 @@
 package main
 
 import (
-    "api.jwt.auth/routers"
-    "api.jwt.auth/settings"
+    "dorian/http-gui/src/api.jwt.auth/routers"
+    "dorian/http-gui/src/api.jwt.auth/settings"
     "github.com/codegangsta/negroni"
     "net/http"
 )
