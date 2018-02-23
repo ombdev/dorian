@@ -1,9 +1,9 @@
 package authentication
 
 import (
-	"api.jwt.auth/core/redis"
-	"api.jwt.auth/services/models"
-	"api.jwt.auth/settings"
+	"dorian/http-gui/src/api.jwt.auth/core/redis"
+	"dorian/http-gui/src/api.jwt.auth/services/models"
+	"dorian/http-gui/src/api.jwt.auth/settings"
 	"bufio"
 	"github.com/pborman/uuid"
 	"crypto/rsa"
