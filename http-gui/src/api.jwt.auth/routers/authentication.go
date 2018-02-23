@@ -1,8 +1,8 @@
 package routers
 
 import (
-	"api.jwt.auth/controllers"
-	"api.jwt.auth/core/authentication"
+	"dorian/http-gui/src/api.jwt.auth/controllers"
+	"dorian/http-gui/src/api.jwt.auth/core/authentication"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 )
