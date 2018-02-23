@@ -40,9 +40,11 @@ func InitJWTAuthenticationBackend() *JWTAuthenticationBackend {
 
 func (backend *JWTAuthenticationBackend) GenerateToken(userUUID string) (string, error) {
 	token := jwt.New(jwt.SigningMethodRS512)
-	token.Claims["exp"] = time.Now().Add(time.Hour * time.Duration(settings.Get().JWTExpirationDelta)).Unix()
-	token.Claims["iat"] = time.Now().Unix()
-	token.Claims["sub"] = userUUID
+	token.Claims = jwt.MapClaims {
+        "exp": time.Now().Add(time.Hour * time.Duration(settings.Get().JWTExpirationDelta)).Unix(),
+        "iat": time.Now().Unix(),
+        "sub": userUUID
+	}
 	tokenString, err := token.SignedString(backend.privateKey)
 	if err != nil {
 		panic(err)
