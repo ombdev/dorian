@@ -43,7 +43,7 @@ func (backend *JWTAuthenticationBackend) GenerateToken(userUUID string) (string,
 	token.Claims = jwt.MapClaims {
         "exp": time.Now().Add(time.Hour * time.Duration(settings.Get().JWTExpirationDelta)).Unix(),
         "iat": time.Now().Unix(),
-        "sub": userUUID
+        "sub": userUUID,
 	}
 	tokenString, err := token.SignedString(backend.privateKey)
 	if err != nil {
