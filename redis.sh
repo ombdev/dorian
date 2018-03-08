@@ -1,15 +1,17 @@
 #!/bin/bash
+#
+#
 
 
-prog="Redis 3 Server"
+prog="Redis 4.0.8 Server"
 REDIS_EXE="redis-server"
-REDIS_CONF="$HOME/redis/redis.conf"
-REDIS_SERVER="$HOME/redis/src/$REDIS_EXE $REDIS_CONF"
+REDIS_CONF="$HOME/redis-4.0.8/redis.conf"
+REDIS_SERVER="$HOME/redis-4.0.8/src/$REDIS_EXE $REDIS_CONF"
 
 start() {
 
     echo "Starting $prog"
-    $REDIS_SERVER
+    $REDIS_SERVER &
 
 }
 
@@ -22,11 +24,11 @@ stop() {
 
 restart() {
 
-    echo "Restarting $prog"
+    echo "Stopping $prog"
     pkill $REDIS_EXE
 
     echo "Starting $prog"
-    nohup $REDIS_SERVER &
+    $REDIS_SERVER &
 }
 
 case "$1" in
