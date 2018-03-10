@@ -17,6 +17,11 @@ type Settings struct {
 	PrivateKeyPath     string
 	PublicKeyPath      string
 	JWTExpirationDelta int
+	DbHost             string
+	DbPort             string
+	DbName             string
+	DbUser             string
+	DbPasswd           string
 }
 
 var settings Settings = Settings{}

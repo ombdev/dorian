@@ -66,5 +66,10 @@
     },
     "PrivateKeyPath": "/home/dorian/go/src/dorian/resources/ssl/restful/private_key",
     "PublicKeyPath": "/home/dorian/go/src/dorian/resources/ssl/restful/public_key.pub",
-    "JWTExpirationDelta": 72
+    "JWTExpirationDelta": 72,
+    "dbHost": "159.89.144.90",
+    "dbPort": "5555",
+    "dbName": "dorian",
+    "dbUser": "dorian",
+    "dbPasswd": "dorian"
 }
