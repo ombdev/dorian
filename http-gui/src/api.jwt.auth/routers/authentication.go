@@ -3,8 +3,8 @@ package routers
 import (
 	"dorian/http-gui/src/api.jwt.auth/controllers"
 	"dorian/http-gui/src/api.jwt.auth/core/authentication"
-	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
+	"github.com/urfave/negroni"
 )
 
 func SetAuthenticationRoutes(router *mux.Router) *mux.Router {

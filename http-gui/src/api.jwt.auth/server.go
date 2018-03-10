@@ -1,10 +1,11 @@
 package main
 
 import (
-    "dorian/http-gui/src/api.jwt.auth/routers"
-    "dorian/http-gui/src/api.jwt.auth/settings"
-    "github.com/codegangsta/negroni"
-    "net/http"
+	"net/http"
+
+	"dorian/http-gui/src/api.jwt.auth/routers"
+	"dorian/http-gui/src/api.jwt.auth/settings"
+	"github.com/urfave/negroni"
 )
 
 func main() {
