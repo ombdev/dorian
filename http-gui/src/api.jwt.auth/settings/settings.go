@@ -9,7 +9,7 @@ import (
 
 var environments = map[string]string{
 	"production":    "/home/j2eeserver/maxima/config/enviroments/prod.json",
-	"preproduction": "home/dorian/go/src/dorian/resources/profiles/default.json",
+	"preproduction": "/home/dorian/go/src/dorian/resources/profiles/default.json",
 	"tests":         "/home/j2eeserver/maxima/config/enviroments/tests.json",
 }
 
