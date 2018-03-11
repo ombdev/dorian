@@ -1,18 +1,18 @@
 package authentication
 
 import (
-	"dorian/http-gui/src/api.jwt.auth/core/redis"
-	"dorian/http-gui/src/api.jwt.auth/services/models"
-	"dorian/http-gui/src/api.jwt.auth/settings"
 	"bufio"
-	"github.com/pborman/uuid"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	jwt "github.com/dgrijalva/jwt-go"
-	"golang.org/x/crypto/bcrypt"
 	"os"
 	"time"
+
+	"dorian/http-gui/src/api.jwt.auth/core/redis"
+	"dorian/http-gui/src/api.jwt.auth/services/models"
+	"dorian/http-gui/src/api.jwt.auth/settings"
+	jwt "github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type JWTAuthenticationBackend struct {
@@ -40,10 +40,10 @@ func InitJWTAuthenticationBackend() *JWTAuthenticationBackend {
 
 func (backend *JWTAuthenticationBackend) GenerateToken(userUUID string) (string, error) {
 	token := jwt.New(jwt.SigningMethodRS512)
-	token.Claims = jwt.MapClaims {
-        "exp": time.Now().Add(time.Hour * time.Duration(settings.Get().JWTExpirationDelta)).Unix(),
-        "iat": time.Now().Unix(),
-        "sub": userUUID,
+	token.Claims = jwt.MapClaims{
+		"exp": time.Now().Add(time.Hour * time.Duration(settings.Get().JWTExpirationDelta)).Unix(),
+		"iat": time.Now().Unix(),
+		"sub": userUUID,
 	}
 	tokenString, err := token.SignedString(backend.privateKey)
 	if err != nil {
@@ -54,15 +54,39 @@ func (backend *JWTAuthenticationBackend) GenerateToken(userUUID string) (string,
 }
 
 func (backend *JWTAuthenticationBackend) Authenticate(user *models.User) bool {
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("testing"), 10)
+	var username string
+	var password string
+	var enabled bool
 
-	testUser := models.User{
-		UUID:     uuid.New(),
-		Username: "haku",
-		Password: string(hashedPassword),
+	db := settings.GetDB()
+	row := db.QueryRow("SELECT * FROM users WHERE username = $1", user.Username)
+	err := row.Scan(&username, &password, &enabled)
+	if err != nil {
+		// Following temporary code is only for testing: whenever the username does not exist, then insert it
+		// into db using its password but in hashed form
+		// TODO: Must be deleted later
+		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		_, err := db.Exec(
+			"INSERT INTO gral_usr (titulo, password, enabled) VALUES ($1, $2, $3)",
+			user.Username,
+			string(hashedPassword),
+			true,
+		)
+		if err != nil {
+
+		} // end of temporary code
+		return false
 	}
 
-	return user.Username == testUser.Username && bcrypt.CompareHashAndPassword([]byte(testUser.Password), []byte(user.Password)) == nil
+	if !enabled {
+		return false
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
+	if err != nil {
+		return false
+	}
+	return true
 }
 
 func (backend *JWTAuthenticationBackend) getTokenRemainingValidity(timestamp interface{}) int {
@@ -78,7 +102,7 @@ func (backend *JWTAuthenticationBackend) getTokenRemainingValidity(timestamp int
 
 func (backend *JWTAuthenticationBackend) Logout(tokenString string, token *jwt.Token) error {
 	redisConn := redis.Connect()
-	claims:= token.Claims.(jwt.MapClaims)
+	claims := token.Claims.(jwt.MapClaims)
 	return redisConn.SetValue(tokenString, tokenString, backend.getTokenRemainingValidity(claims["exp"]))
 }
 

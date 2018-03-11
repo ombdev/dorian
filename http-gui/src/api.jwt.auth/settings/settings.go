@@ -1,10 +1,13 @@
 package settings
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
+
+	_ "github.com/lib/pq"
 )
 
 var environments = map[string]string{
@@ -24,8 +27,9 @@ type Settings struct {
 	DbPasswd           string
 }
 
-var settings Settings = Settings{}
+var settings = Settings{}
 var env = "preproduction"
+var db *sql.DB
 
 func Init() {
 	env = os.Getenv("GO_ENV")
@@ -41,7 +45,7 @@ func LoadSettingsByEnv(env string) {
 	if err != nil {
 		fmt.Println("Error while reading config file", err)
 	}
-	settings = Settings{}
+
 	jsonErr := json.Unmarshal(content, &settings)
 	if jsonErr != nil {
 		fmt.Println("Error while parsing config file", jsonErr)
@@ -61,4 +65,16 @@ func Get() Settings {
 
 func IsTestEnvironment() bool {
 	return env == "tests"
+}
+
+func GetDB() *sql.DB {
+	if db == nil {
+		var err error
+		connStr := "host=" + settings.DbHost + " port=" + settings.DbPort + " dbname=" + settings.DbName + " user=" + settings.DbUser + " password=" + settings.DbPasswd + " sslmode=require"
+		db, err = sql.Open("postgres", connStr)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return db
 }
